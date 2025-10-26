@@ -61,10 +61,10 @@ class DecisionTreeClassifier(object):
     def __init__(self,
                  criterion="info_gain",
                  splitter="best",
-                 max_depth=None,
-                 max_features=None,
+                 max_depth=2,
+                 max_features=1,
                  min_samples_split=2,
-                 min_impurity_split=0.0,
+                 min_impurity_split=0,
                  random_state=None):
         self.criterion = criterion
         self.splitter = splitter

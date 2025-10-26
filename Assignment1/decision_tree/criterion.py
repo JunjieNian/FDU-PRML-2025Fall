@@ -49,7 +49,18 @@ def __info_gain(y, l_y, r_y):
     # l_y and r_y                                                             #
     ###########################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
+    def entropy(labels, total_count):
+        ent = 0.0
+        for count in labels.values():
+            p = count / total_count
+            ent -= p * math.log2(p)
+        return ent
+    total_count = len(y)
+    left_count = len(l_y)
+    right_count = len(r_y)
+    before = entropy(all_labels, total_count)
+    after = (left_count / total_count) * entropy(left_labels, left_count) + (right_count / total_count) * entropy(right_labels, right_count)
+    info_gain = before - after
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     
     return info_gain
@@ -68,7 +79,21 @@ def __info_gain_ratio(y, l_y, r_y):
     # into l_y and r_y                                                        #
     ###########################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
+    def split_info(left_count, right_count, total_count):
+        si = 0.0
+        for count in [left_count, right_count]:
+            if count == 0:
+                continue
+            p = count / total_count
+            si -= p * math.log2(p)
+        return si
+    total_count = len(y)
+    left_count = len(l_y)
+    right_count = len(r_y)
+    si = split_info(left_count, right_count, total_count)
+    if si == 0:
+        return 0
+    info_gain /= si
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     return info_gain
 
@@ -89,7 +114,17 @@ def __gini_index(y, l_y, r_y):
     # after splitting y into l_y and r_y                                      #
     ###########################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
+    def gini(labels, total_count):
+        gini_index = 1.0
+        for count in labels.values():
+            p = count / total_count
+            gini_index -= p * p
+        return gini_index
+    total_count = len(y)
+    left_count = len(l_y)
+    right_count = len(r_y)
+    before = gini(all_labels, total_count)
+    after = (left_count / total_count) * gini(left_labels, left_count) + (right_count / total_count) * gini(right_labels, right_count)
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     return before - after
 
@@ -106,6 +141,15 @@ def __error_rate(y, l_y, r_y):
     # after splitting y into l_y and r_y                                      #
     ###########################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
+    def error_rate(labels, total_count):
+        if total_count == 0:
+            return 0
+        max_count = max(labels.values())
+        return 1 - (max_count / total_count)
+    total_count = len(y)
+    left_count = len(l_y)
+    right_count = len(r_y)
+    before = error_rate(all_labels, total_count)
+    after = (left_count / total_count) * error_rate(left_labels, left_count) + (right_count / total_count) * error_rate(right_labels, right_count)
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     return before - after
